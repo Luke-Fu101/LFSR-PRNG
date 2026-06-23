@@ -6,8 +6,8 @@ class LFSR_GUI(ctk.CTk):
         super().__init__()
         self.title("LFSR Simulator")
         self.geometry("800x800")
-        self.columnconfigure(0, weight=50)
-        self.columnconfigure(2, weight=5)   
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(0, weight=1)   
         self.resizable(False, False)
         self.lfsr = LFSR_Class()
         self.is_running = False
@@ -16,20 +16,20 @@ class LFSR_GUI(ctk.CTk):
     def create_widgets(self):
         # Using .grid() uniformly across all elements
         # Title Label
-        self.state_label = ctk.CTkLabel(self, text="LFSR PRNG", font=("Serif", 36, "bold"))
-        self.state_label.grid(row=0, column=0, pady=10, padx=20, columnspan=2)
+        self.state_label = ctk.CTkLabel(self, text="LFSR Visualizer", font=("Serif", 20, "bold"))
+        self.state_label.grid(row=0, column=0, pady=1, padx=20, columnspan=2)
         # Shift Button
         self.shift_button = ctk.CTkButton(self, text="Shift", command=self.shift_lfsr)
-        self.shift_button.grid(row=2, column=0, pady=10, padx=20, columnspan=2)
+        self.shift_button.grid(row=2, column=0, pady=1, padx=20, columnspan=2)
         # Label for Hertz (HZ)
         self.frequency_label = ctk.CTkLabel(self, text="Clock Cycle (Hz):")
-        self.frequency_label.grid(row=4, column=0, pady=10, padx=10, sticky="w")
+        self.frequency_label.grid(row=4, column=0, pady=1, padx=10, sticky="w")
         # Toggle on/off button for the clock engine
         self.toggle_button = ctk.CTkButton(self, text="Start Auto-Clock", command=self.toggle_clock)
-        self.toggle_button.grid(row=3, column=0, pady=10, padx=20)
+        self.toggle_button.grid(row=3, column=0, pady=1, padx=20)
         # Slider to adjust the clock cycle frequency (0-20 Hz)
         self.speed_slider = ctk.CTkSlider(self, from_=0, to=20, number_of_steps=10, command=self.update_speed, width=400, height=20, button_color="#2bc275", progress_color="#2bc275", fg_color="#444444", corner_radius=8, )
-        self.speed_slider.grid(row=5, column=0, pady=10, padx=20, sticky="ew")
+        self.speed_slider.grid(row=5, column=0, pady=1, padx=20, sticky="ew")
         self.speed_slider.set(0)
 
         # Container for 4x4 grid
@@ -57,9 +57,9 @@ class LFSR_GUI(ctk.CTk):
                 border_color = "#444444" 
                 border_width = 2
             # boxes for grids
-            box_frame = ctk.CTkFrame(self.grid_container, width=60, height=60,corner_radius=8,border_width=border_width, border_color=border_color, fg_color="#2A2A2A") # Sleek dark background fill
-            box_frame.grid(row=row_idx, column=col_idx, padx=6, pady=6)
-            box_frame.grid_propagate(False) # Forces the frame to maintain its 60x60 size
+            box_frame = ctk.CTkFrame(self.grid_container, width=50, height=50,corner_radius=8,border_width=border_width, border_color=border_color, fg_color="#2A2A2A") # Sleek dark background fill
+            box_frame.grid(row=row_idx, column=col_idx, padx=2, pady=2)
+            box_frame.grid_propagate(False) # Forces the frame to maintain its 50x50 size
 
             # Center an inner label to print the current bit value
             bit_val = self.lfsr.seed[i]
@@ -74,17 +74,38 @@ class LFSR_GUI(ctk.CTk):
             # Save a reference to this specific label using its register index
             self.block_labels[i] = label
 
-
+        # End to end cipher + decipher
         # Create a label to flag what the display box is
         self.keystream_title = ctk.CTkLabel(self, text="Generated Keystream:", font=("Helvetica", 14, "bold"))
-        self.keystream_title.grid(row=7, column=0, columnspan=2, pady=(10, 0), sticky="w", padx=40)
+        self.keystream_title.grid(row=7, column=0, columnspan=2, pady=1, sticky="w", padx=40)
 
         self.keystream_display = ctk.CTkTextbox(self,width=500, height=60,font=("Consolas", 16), text_color="#2bc275", fg_color="#1e1e1e", border_color="#444444", border_width=2, corner_radius=8,wrap="char")
-        self.keystream_display.grid(row=8, column=0, columnspan=2, pady=(5, 20), padx=40, sticky="ew")
+        self.keystream_display.grid(row=8, column=0, columnspan=2, pady=1, padx=40, sticky="ew")
         
         # Initialize with text placeholder
         self.keystream_display.insert("1.0", "Click 'Shift' to generate bits...")
         self.keystream_display.configure(state="disabled")
+
+        self.crypto_panel = ctk.CTkFrame(self, fg_color="#181818", border_width=1, border_color="#333333", corner_radius=5, width = 200, height = 100)
+        self.crypto_panel.grid(row=9, column=0, columnspan=2, pady=1, padx=40, sticky="ew")
+        self.crypto_panel.columnconfigure(0, weight=1)
+
+        self.crypto_title = ctk.CTkLabel(self.crypto_panel, text="Symmetric Stream Cipher", font=("Helvetica", 14, "bold", "underline"), text_color="#2bc275")
+        self.crypto_title.grid(row=0, column=0, padx=10, pady=1, sticky="w")
+
+        # Text input field for typing a plaintext message
+        self.plaintext_label = ctk.CTkLabel(self.crypto_panel, text="Plaintext Message Input:", font=("Helvetica", 11, "bold"))
+        self.plaintext_label.grid(row=1, column=0, padx=10, pady=1, sticky="w")
+        self.plaintext_entry = ctk.CTkEntry(self.crypto_panel, width=460, placeholder_text="Type a message here in plain text:")
+        self.plaintext_entry.grid(row=2, column=0, padx=10, pady=1, sticky="w")
+
+        # Output field displaying the live ciphertext string
+        self.ciphertext_label = ctk.CTkLabel(self.crypto_panel, text="Resulting Ciphertext Binary Stream (ASCII):", font=("Helvetica", 11, "bold"))
+        self.ciphertext_label.grid(row=3, column=0, padx=10, pady=1, sticky="w")
+        self.ciphertext_entry = ctk.CTkTextbox(self.crypto_panel, width=460, height = 70, fg_color="#1e1e1e", text_color="#ae0000", font=("Consolas", 14))
+        self.ciphertext_entry.grid(row=4, column=0, padx=10, pady=1, sticky="w")
+        self.ciphertext_entry.insert("1.0", "Waiting for message and/or keystream (encryption formula: Cipher_Bit = Plain_Bit XOR Keystream_Bit)...")
+        self.ciphertext_entry.configure(state="disabled")
 
     def shift_lfsr(self):
         output_bit = self.lfsr.shift()
@@ -107,6 +128,38 @@ class LFSR_GUI(ctk.CTk):
         self.keystream_display.see("end") 
         
         self.keystream_display.configure(state="disabled")
+
+
+        user_message = self.plaintext_entry.get()
+        if user_message:
+            # Transforming the plaintext text into a complete continuous list of 0s and 1s with ASCII Notation
+            message_bits = []
+            for character in user_message:
+                binary_representation = format(ord(character), '08b') # Convert to 8-bit ASCII string
+                for single_bit in binary_representation:
+                    message_bits.append(int(single_bit))
+
+            # Calculate the matching ciphertext stream using our shared LFSR history length
+            ciphertext_bits = []
+            # Stop matching when we exhaust the message bits or our current history limits
+            total_active_ticks = min(len(self.lfsr.history), len(message_bits))
+            
+            for index in range(total_active_ticks):
+                # Cipher_Bit = Plain_Bit XOR Keystream_Bit
+                cipher_bit = message_bits[index] ^ self.lfsr.history[index]
+                ciphertext_bits.append(str(cipher_bit))
+                if index > 0 and index % 8 == 0:
+                    ciphertext_bits.append(" ")
+
+            # If our message is longer than the current clocks shifted, fill remaining with visual placeholders
+            if len(message_bits) > len(self.lfsr.history):
+                ciphertext_bits.append("...")
+
+            # Update the Entry widget
+            self.ciphertext_entry.configure(state="normal")
+            self.ciphertext_entry.delete("1.0", "end")
+            self.ciphertext_entry.insert("1.0", "".join(ciphertext_bits))
+            self.ciphertext_entry.configure(state="disabled")
     def update_speed(self, value):
         hz = int(value)
         print(f"New clock cycle frequency: {hz} hz")
