@@ -11,6 +11,9 @@ An interactive desktop application built with Python and CustomTkinter designed 
 * **Symmetric Encryption Sandbox:** A cryptographically sound text-processing terminal that translates arbitrary plaintext string inputs into ASCII binary bits and encrypts them synchronously via bitwise XOR operations as the LFSR shifts.
 * **Infinite Keystream Tracker:** Captures, holds, and auto-scrolls through the complete historical sequence of generated pseudo-random bits.
 
+<img width="600" height="500" alt="Screenshot 2026-06-25 2 49 21 PM" src="https://github.com/user-attachments/assets/fcad89e3-086f-488a-9b99-b8963f186536" />
+
+
 ---
 
 ## 🧠 Core Cryptographic Concepts
