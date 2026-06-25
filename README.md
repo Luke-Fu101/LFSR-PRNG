@@ -44,3 +44,21 @@ The output window automatically formats the ciphertext in clean 8-bit blocks (se
    ```bash
    git clone [https://github.com/Luke-Fu101/Multi-LFSR-PRNG.git](https://github.com/Luke-Fu101/Multi-LFSR-PRNG.git)
    cd Multi-LFSR-PRNG
+   ```
+
+2. **Set Up a Virtual Environment (Recommended):**
+   ```bash
+   python -m venv env
+   source env/bin/activate        # macOS / Linux
+   env\Scripts\activate           # Windows
+   ```
+
+3. **Install Dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Run the Application:**
+   ```bash
+   python src/main.py
+   ```

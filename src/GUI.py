@@ -186,6 +186,3 @@ class LFSR_GUI(ctk.CTk):
             self.clock_cycle()
         else:
             self.toggle_button.configure(text="Start Auto-Clock", fg_color=ctk.ThemeManager.theme["CTkButton"]["fg_color"])
-
-GUI = LFSR_GUI()
-GUI.mainloop()
